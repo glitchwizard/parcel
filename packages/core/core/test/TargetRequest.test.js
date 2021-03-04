@@ -162,7 +162,7 @@ describe('TargetResolver', () => {
       [
         {
           name: 'main',
-          distDir: './fixtures/common-targets/dist/main',
+          distDir: 'fixtures/common-targets/dist/main',
           distEntry: 'index.js',
           publicUrl: '/',
           env: {
@@ -193,7 +193,7 @@ describe('TargetResolver', () => {
         },
         {
           name: 'module',
-          distDir: './fixtures/common-targets/dist/module',
+          distDir: 'fixtures/common-targets/dist/module',
           distEntry: 'index.js',
           publicUrl: '/',
           env: {
@@ -225,7 +225,7 @@ describe('TargetResolver', () => {
         },
         {
           name: 'browser',
-          distDir: './fixtures/common-targets/dist/browser',
+          distDir: 'fixtures/common-targets/dist/browser',
           distEntry: 'index.js',
           publicUrl: '/assets',
           env: {
@@ -309,7 +309,7 @@ describe('TargetResolver', () => {
       [
         {
           name: 'main',
-          distDir: './fixtures/custom-targets/dist/main',
+          distDir: 'fixtures/custom-targets/dist/main',
           distEntry: 'index.js',
           publicUrl: '/',
           env: {
@@ -339,7 +339,7 @@ describe('TargetResolver', () => {
         },
         {
           name: 'browserModern',
-          distDir: './fixtures/custom-targets/dist/browserModern',
+          distDir: 'fixtures/custom-targets/dist/browserModern',
           distEntry: 'index.js',
           publicUrl: '/',
           env: {
@@ -369,7 +369,7 @@ describe('TargetResolver', () => {
         },
         {
           name: 'browserLegacy',
-          distDir: './fixtures/custom-targets/dist/browserLegacy',
+          distDir: 'fixtures/custom-targets/dist/browserLegacy',
           distEntry: 'index.js',
           publicUrl: '/',
           env: {
@@ -408,7 +408,7 @@ describe('TargetResolver', () => {
       [
         {
           name: 'app',
-          distDir: './fixtures/custom-targets-distdir/www',
+          distDir: 'fixtures/custom-targets-distdir/www',
           distEntry: undefined,
           publicUrl: 'www',
           env: {
@@ -516,7 +516,7 @@ describe('TargetResolver', () => {
     assert.deepEqual(await targetResolver.resolve(CONTEXT_FIXTURE_PATH), [
       {
         name: 'main',
-        distDir: './fixtures/context/dist/main',
+        distDir: 'fixtures/context/dist/main',
         distEntry: 'index.js',
         publicUrl: '/',
         env: {
@@ -591,7 +591,7 @@ describe('TargetResolver', () => {
       [
         {
           name: 'main',
-          distDir: './fixtures/common-targets/dist/main',
+          distDir: 'fixtures/common-targets/dist/main',
           distEntry: 'index.js',
           publicUrl: '/',
           env: {
@@ -621,7 +621,7 @@ describe('TargetResolver', () => {
         },
         {
           name: 'browser',
-          distDir: './fixtures/common-targets/dist/browser',
+          distDir: 'fixtures/common-targets/dist/browser',
           distEntry: 'index.js',
           publicUrl: '/assets',
           env: {
@@ -666,7 +666,7 @@ describe('TargetResolver', () => {
       [
         {
           name: 'default',
-          distDir: './.parcel-cache/dist',
+          distDir: '.parcel-cache/dist',
           publicUrl: '/',
           env: {
             id: 'c662827151e303ed37b66363ce56741b',

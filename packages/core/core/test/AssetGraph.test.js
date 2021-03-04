@@ -31,8 +31,8 @@ describe('AssetGraph', () => {
     });
 
     assert(graph.nodes.has('@@root'));
-    assert(graph.nodes.has('entry_specifier:./path/to/index1'));
-    assert(graph.nodes.has('entry_specifier:./path/to/index2'));
+    assert(graph.nodes.has('entry_specifier:path/to/index1'));
+    assert(graph.nodes.has('entry_specifier:path/to/index2'));
   });
 
   it('resolveEntry should connect an entry_specifier node to entry_file nodes', () => {
@@ -65,7 +65,7 @@ describe('AssetGraph', () => {
     );
     assert(
       graph.hasEdge(
-        'entry_specifier:./path/to/index1',
+        'entry_specifier:path/to/index1',
         nodeFromEntryFile({
           filePath: toProjectPath('/path/to/index1/src/main.js'),
           packagePath: toProjectPath('/path/to/index1'),
@@ -124,7 +124,7 @@ describe('AssetGraph', () => {
     assert(
       graph.nodes.has(
         createDependency({
-          moduleSpecifier: './path/to/index1/src/main.js',
+          moduleSpecifier: 'path/to/index1/src/main.js',
           target: DEFAULT_TARGETS[0],
           env: DEFAULT_ENV,
         }).id,
@@ -133,7 +133,7 @@ describe('AssetGraph', () => {
     assert(
       graph.nodes.has(
         createDependency({
-          moduleSpecifier: './path/to/index2/src/main.js',
+          moduleSpecifier: 'path/to/index2/src/main.js',
           target: DEFAULT_TARGETS[0],
           env: DEFAULT_ENV,
         }).id,
@@ -142,16 +142,16 @@ describe('AssetGraph', () => {
     assert.deepEqual(graph.getAllEdges(), [
       {
         from: '@@root',
-        to: 'entry_specifier:./path/to/index1',
+        to: 'entry_specifier:path/to/index1',
         type: null,
       },
       {
         from: '@@root',
-        to: 'entry_specifier:./path/to/index2',
+        to: 'entry_specifier:path/to/index2',
         type: null,
       },
       {
-        from: 'entry_specifier:./path/to/index1',
+        from: 'entry_specifier:path/to/index1',
         to: nodeFromEntryFile({
           filePath: toProjectPath('/path/to/index1/src/main.js'),
           packagePath: toProjectPath('/path/to/index1'),
@@ -159,7 +159,7 @@ describe('AssetGraph', () => {
         type: null,
       },
       {
-        from: 'entry_specifier:./path/to/index2',
+        from: 'entry_specifier:path/to/index2',
         to: nodeFromEntryFile({
           filePath: toProjectPath('/path/to/index2/src/main.js'),
           packagePath: toProjectPath('/path/to/index2'),
@@ -172,7 +172,7 @@ describe('AssetGraph', () => {
           packagePath: toProjectPath('/path/to/index1'),
         }).id,
         to: createDependency({
-          moduleSpecifier: './path/to/index1/src/main.js',
+          moduleSpecifier: 'path/to/index1/src/main.js',
           target: DEFAULT_TARGETS[0],
           env: DEFAULT_ENV,
         }).id,
@@ -184,7 +184,7 @@ describe('AssetGraph', () => {
           packagePath: toProjectPath('/path/to/index2'),
         }).id,
         to: createDependency({
-          moduleSpecifier: './path/to/index2/src/main.js',
+          moduleSpecifier: 'path/to/index2/src/main.js',
           target: DEFAULT_TARGETS[0],
           env: DEFAULT_ENV,
         }).id,
@@ -220,7 +220,7 @@ describe('AssetGraph', () => {
     );
 
     let dep = createDependency({
-      moduleSpecifier: './path/to/index/src/main.js',
+      moduleSpecifier: 'path/to/index/src/main.js',
       target: DEFAULT_TARGETS[0],
       env: DEFAULT_ENV,
     });
@@ -277,7 +277,7 @@ describe('AssetGraph', () => {
     );
 
     let dep = createDependency({
-      moduleSpecifier: './path/to/index/src/main.js',
+      moduleSpecifier: 'path/to/index/src/main.js',
       target: DEFAULT_TARGETS[0],
       env: DEFAULT_ENV,
       sourcePath: toProjectPath(''),
@@ -424,7 +424,7 @@ describe('AssetGraph', () => {
     );
 
     let dep = createDependency({
-      moduleSpecifier: './path/to/index/src/main.js',
+      moduleSpecifier: 'path/to/index/src/main.js',
       env: DEFAULT_ENV,
       target: DEFAULT_TARGETS[0],
     });
