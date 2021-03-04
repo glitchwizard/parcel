@@ -6,7 +6,7 @@ import type {Validator, ValidateResult} from '@parcel/types';
 import type {Diagnostic} from '@parcel/diagnostic';
 
 import path from 'path';
-import {resolveConfig, normalizeSeparators} from '@parcel/utils';
+import {resolveConfig} from '@parcel/utils';
 import logger, {PluginLogger} from '@parcel/logger';
 import ThrowableDiagnostic, {errorToDiagnostic} from '@parcel/diagnostic';
 import ParcelConfig from './ParcelConfig';
@@ -15,6 +15,7 @@ import {createAsset} from './assetUtils';
 import {Asset} from './public/Asset';
 import PluginOptions from './public/PluginOptions';
 import summarizeRequest from './summarizeRequest';
+import {fromProjectPath, fromProjectPathRelative} from './projectPath';
 
 export type ValidationOpts = {|
   config: ParcelConfig,
@@ -90,22 +91,23 @@ export default class Validation {
               await Promise.all(
                 assets.map(async asset => {
                   let config = null;
+                  let publicAsset = new Asset(asset);
                   if (plugin.getConfig) {
                     config = await plugin.getConfig({
-                      asset: new Asset(asset),
+                      asset: publicAsset,
                       options: pluginOptions,
                       logger: validatorLogger,
                       resolveConfig: (configNames: Array<string>) =>
                         resolveConfig(
                           this.options.inputFS,
-                          asset.value.filePath,
+                          publicAsset.filePath,
                           configNames,
                         ),
                     });
                   }
 
                   let validatorResult = await plugin.validate({
-                    asset: new Asset(asset),
+                    asset: publicAsset,
                     options: pluginOptions,
                     config,
                     logger: validatorLogger,
@@ -133,7 +135,7 @@ export default class Validation {
       this.requests.map(async request => {
         this.report({
           type: 'validation',
-          filePath: request.filePath,
+          filePath: fromProjectPath(this.options.projectRoot, request.filePath),
         });
 
         let asset = await this.loadAsset(request);
@@ -179,24 +181,21 @@ export default class Validation {
     let {filePath, env, code, sideEffects, query} = request;
     let {content, size, hash, isSource} = await summarizeRequest(
       this.options.inputFS,
-      {filePath: request.filePath},
+      {
+        filePath: fromProjectPath(this.options.projectRoot, request.filePath),
+      },
     );
 
     // If the transformer request passed code rather than a filename,
     // use a hash as the base for the id to ensure it is unique.
-    let idBase =
-      code != null
-        ? hash
-        : normalizeSeparators(
-            path.relative(this.options.projectRoot, filePath),
-          );
+    let idBase = code != null ? hash : fromProjectPathRelative(filePath);
     return new UncommittedAsset({
       idBase,
       value: createAsset({
         idBase,
         filePath: filePath,
         isSource,
-        type: path.extname(filePath).slice(1),
+        type: path.extname(fromProjectPathRelative(filePath)).slice(1),
         hash,
         query,
         env: env,

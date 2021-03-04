@@ -24,6 +24,7 @@ import {mapVisitor} from '../Graph';
 import Environment from './Environment';
 import Dependency, {dependencyToInternalDependency} from './Dependency';
 import Target from './Target';
+import {fromProjectPath} from '../projectPath';
 
 const internalBundleToBundle: DefaultWeakMap<
   ParcelOptions,
@@ -120,11 +121,11 @@ export class Bundle implements IBundle {
   }
 
   get target(): ITarget {
-    return new Target(this.#bundle.target);
+    return new Target(this.#bundle.target, this.#options);
   }
 
   get filePath(): ?FilePath {
-    return this.#bundle.filePath;
+    return fromProjectPath(this.#options.projectRoot, this.#bundle.filePath);
   }
 
   get name(): ?string {
@@ -179,7 +180,10 @@ export class Bundle implements IBundle {
             value: assetFromValue(node.value, this.#options),
           };
         } else if (node.type === 'dependency') {
-          return {type: 'dependency', value: new Dependency(node.value)};
+          return {
+            type: 'dependency',
+            value: new Dependency(node.value, this.#options),
+          };
         }
       }, visit),
     );
@@ -196,6 +200,7 @@ export class Bundle implements IBundle {
 export class NamedBundle extends Bundle implements INamedBundle {
   #bundle /*: InternalBundle */;
   #bundleGraph /*: BundleGraph */;
+  #options /*: ParcelOptions */;
 
   constructor(
     sentinel: mixed,
@@ -206,6 +211,7 @@ export class NamedBundle extends Bundle implements INamedBundle {
     super(sentinel, bundle, bundleGraph, options);
     this.#bundle = bundle; // Repeating for flow
     this.#bundleGraph = bundleGraph; // Repeating for flow
+    this.#options = options;
   }
 
   static get(
@@ -233,7 +239,10 @@ export class NamedBundle extends Bundle implements INamedBundle {
   }
 
   get filePath(): FilePath {
-    return nullthrows(this.#bundle.filePath);
+    return fromProjectPath(
+      this.#options.projectRoot,
+      nullthrows(this.#bundle.filePath),
+    );
   }
 
   get name(): string {

@@ -37,6 +37,7 @@ import RequestTracker, {getWatcherOptions} from './RequestTracker';
 import createAssetGraphRequest from './requests/AssetGraphRequest';
 import createValidationRequest from './requests/ValidationRequest';
 import {Disposable} from '@parcel/events';
+import {toProjectPath} from './projectPath';
 
 registerCoreWithSerializer();
 
@@ -400,7 +401,12 @@ export default class Parcel {
           return;
         }
 
-        let isInvalid = this.#requestTracker.respondToFSEvents(events);
+        let isInvalid = this.#requestTracker.respondToFSEvents(
+          events.map(e => ({
+            type: e.type,
+            path: toProjectPath(resolvedOptions.projectRoot, e.path),
+          })),
+        );
         if (isInvalid && this.#watchQueue.getNumWaiting() === 0) {
           if (this.#watchAbortController) {
             this.#watchAbortController.abort();

@@ -25,6 +25,7 @@ import applyRuntimes from './applyRuntimes';
 import {PARCEL_VERSION} from './constants';
 import {assertSignalNotAborted} from './utils';
 import {deserialize, serialize} from './serializer';
+import {joinProjectPath} from './projectPath';
 
 type Opts = {|
   options: ParcelOptions,
@@ -233,7 +234,7 @@ export default class BundlerRunner {
           }
 
           let target = nullthrows(internalBundle.target);
-          internalBundle.filePath = path.join(
+          internalBundle.filePath = joinProjectPath(
             target.distDir,
             normalizeSeparators(name),
           );

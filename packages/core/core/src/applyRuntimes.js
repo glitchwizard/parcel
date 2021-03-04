@@ -23,6 +23,7 @@ import {PluginLogger} from '@parcel/logger';
 import ThrowableDiagnostic, {errorToDiagnostic} from '@parcel/diagnostic';
 import {dependencyToInternalDependency} from './public/Dependency';
 import createAssetGraphRequest from './requests/AssetGraphRequest';
+import {fromProjectPath, toProjectPath} from './projectPath';
 
 type RuntimeConnection = {|
   bundle: InternalBundle,
@@ -68,7 +69,7 @@ export default async function applyRuntimes({
           for (let {code, dependency, filePath, isEntry} of runtimeAssets) {
             let assetGroup = {
               code,
-              filePath,
+              filePath: toProjectPath(options.projectRoot, filePath),
               env: bundle.env,
               // Runtime assets should be considered source, as they should be
               // e.g. compiled to run in the target environment
@@ -87,7 +88,7 @@ export default async function applyRuntimes({
         throw new ThrowableDiagnostic({
           diagnostic: errorToDiagnostic(e, {
             origin: runtime.name,
-            filePath: bundle.filePath,
+            filePath: fromProjectPath(options.projectRoot, bundle.filePath),
           }),
         });
       }

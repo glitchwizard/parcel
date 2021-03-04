@@ -1,24 +1,24 @@
 // @flow strict-local
 
-import type {
-  FileCreateInvalidation,
-  FilePath,
-  PackageName,
-  ConfigResult,
-  DevDepOptions,
-} from '@parcel/types';
+import type {PackageName, ConfigResult} from '@parcel/types';
 import {md5FromString} from '@parcel/utils';
-import type {Config, Environment} from './types';
+import type {
+  Config,
+  Environment,
+  InternalFileCreateInvalidation,
+  InternalDevDepOptions,
+} from './types';
+import {type ProjectPath, fromProjectPathRelative} from './projectPath';
 
 type ConfigOpts = {|
   plugin: PackageName,
   isSource: boolean,
-  searchPath: FilePath,
+  searchPath: ProjectPath,
   env: Environment,
   result?: ConfigResult,
-  includedFiles?: Set<FilePath>,
-  invalidateOnFileCreate?: Array<FileCreateInvalidation>,
-  devDeps?: Array<DevDepOptions>,
+  includedFiles?: Set<ProjectPath>,
+  invalidateOnFileCreate?: Array<InternalFileCreateInvalidation>,
+  devDeps?: Array<InternalDevDepOptions>,
   shouldInvalidateOnStartup?: boolean,
 |};
 
@@ -34,7 +34,9 @@ export function createConfig({
   shouldInvalidateOnStartup,
 }: ConfigOpts): Config {
   return {
-    id: md5FromString(plugin + searchPath + env.id + String(isSource)),
+    id: md5FromString(
+      plugin + fromProjectPathRelative(searchPath) + env.id + String(isSource),
+    ),
     isSource,
     searchPath,
     env,
